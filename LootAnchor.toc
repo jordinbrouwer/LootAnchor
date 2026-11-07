@@ -1,0 +1,16 @@
+## Interface: 120100, 120005, 120007, 16001
+
+## Title: LootAnchor
+## Notes: Move the default loot roll windows and the "You received" popups.
+## IconTexture: Interface\AddOns\LootAnchor\LootAnchor
+## Version: @project-version@
+## Author: Jordin
+
+## DefaultState: enabled
+## LoadOnDemand: 0
+## SavedVariables: LootAnchorDB
+
+LootAnchor.lua
+LootAnchor_Unlock.lua
+LootAnchor_Panel.lua
+LootAnchor_Command.lua
