@@ -44,13 +44,8 @@ fi
 
 mkdir -p "$(dirname "$notes_path")"
 
-if ! grep -Eq '^## \[Unreleased\]' CHANGELOG.md; then
-  echo "[RELEASE] FAILED: CHANGELOG.md must contain an Unreleased header."
-  exit 1
-fi
-
 release_date="$(
-  sed -nE 's/^## \[[0-9]+\.[0-9]+\.[0-9]+ \(([0-9]{4}-[0-9]{2}-[0-9]{2})\)\].*/\1/p' CHANGELOG.md | head -n 1
+  sed -nE 's/^## [0-9]+\.[0-9]+\.[0-9]+ - ([0-9]{4}-[0-9]{2}-[0-9]{2})$/\1/p' CHANGELOG.md | head -n 1
 )"
 if [ -z "$release_date" ]; then
   echo "[RELEASE] FAILED: First release heading must include a date (YYYY-MM-DD)."
@@ -63,7 +58,7 @@ if [ "$release_date" \> "$today" ]; then
 fi
 
 version="$(
-  sed -nE 's/^## \[([0-9]+\.[0-9]+\.[0-9]+).*/\1/p' CHANGELOG.md | head -n 1
+  sed -nE 's/^## ([0-9]+\.[0-9]+\.[0-9]+) - .*/\1/p' CHANGELOG.md | head -n 1
 )"
 if [ -z "$version" ]; then
   echo "[RELEASE] FAILED: Could not extract latest version from CHANGELOG.md."
@@ -72,7 +67,7 @@ fi
 
 awk '
   BEGIN { in_section = 0; first_done = 0 }
-  /^## \[[0-9]+\.[0-9]+\.[0-9]+/ {
+  /^## [0-9]+\.[0-9]+\.[0-9]+ - / {
     if (first_done) exit
     in_section = 1
     first_done = 1
