@@ -90,6 +90,12 @@ local function MakeHandle(t)
   text:SetText(t.label)
   text:SetTextColor(r, g, b)
 
+  -- The loot roll box carries the grow direction option itself.
+  if t.key == "roll" then
+    local arrow = LA.GrowButton(h)
+    LA.growCheck = arrow
+  end
+
   -- Dragging is done by hand so the box can snap while it moves.
   h:SetScript("OnDragStart", function(self)
     Raise()
@@ -132,6 +138,7 @@ function LA.RefreshHandles()
   if not LA.unlocked then return end
   local function Apply()
     if not LA.unlocked then return end
+    if LA.growCheck then LA.growCheck:Refresh() end
     for _, t in ipairs(targets) do PositionHandle(t) end
   end
   Apply()
@@ -234,6 +241,7 @@ function LA.Toggle()
   local unlocked = LA.unlocked
   if unlocked then
     LA.snapshot = {}
+    LA.snapGrow = LA.db.growDown
     for _, t in ipairs(targets) do
       local s = LA.db[t.key]
       LA.snapshot[t.key] = s and { x = s.x, y = s.y } or nil
