@@ -10,7 +10,7 @@
 - Settings panel: one **Open LootAnchor** button in the middle of the panel.
 
 ### Changed
-- The code is split into `LootAnchor.lua`, `LootAnchor_Unlock.lua`, `LootAnchor_Panel.lua` and `LootAnchor_Command.lua`, like AutomaticRoleCheck.
+- The code is split into `LootAnchor.lua`, `LootAnchor_Unlock.lua`, `LootAnchor_Panel.lua` and `LootAnchor_Command.lua`.
 - Defaults is no longer in the settings panel, only on the unlock screen toolbar.
 - Defaults keeps the toolbar position.
 
