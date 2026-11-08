@@ -31,6 +31,41 @@ function LA.Button(parent, label, width)
   return b
 end
 
+-- Grow direction arrow, in the top right corner of the Loot Rolls box of the unlock screen.
+-- Up arrow = rolls grow up (Blizzard's default), down arrow = rolls grow down.
+function LA.GrowButton(parent)
+  local b = CreateFrame("Button", nil, parent)
+  b:SetSize(22, 22)
+  local function Refresh()
+    local dir = (LA.db and LA.db.growDown) and "Down" or "Up"
+    b:SetNormalTexture("Interface\\Buttons\\Arrow-" .. dir .. "-Up")
+    b:SetPushedTexture("Interface\\Buttons\\Arrow-" .. dir .. "-Down")
+    b:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
+    -- The up arrow is drawn lower in its texture than the down arrow; nudge it so both sit alike.
+    b:ClearAllPoints()
+    b:SetPoint("TOPRIGHT", parent, "TOPRIGHT", -4, dir == "Down" and -4 or 3)
+  end
+  b.Refresh = Refresh
+  Refresh()
+  b:SetScript("OnShow", Refresh)
+  b:SetScript("OnClick", function()
+    LA.SetGrowDown(not (LA.db and LA.db.growDown))
+    Refresh()
+    if GameTooltip:GetOwner() == b then b:GetScript("OnEnter")(b) end
+  end)
+  b:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
+    if LA.db and LA.db.growDown then
+      GameTooltip:SetText("Loot rolls grow down. Click to grow up.")
+    else
+      GameTooltip:SetText("Loot rolls grow up. Click to grow down.")
+    end
+    GameTooltip:Show()
+  end)
+  b:SetScript("OnLeave", GameTooltip_Hide)
+  return b
+end
+
 -- t.blizz = the anchors Blizzard itself last asked for (never our own), so Defaults
 -- can put a frame back exactly where Blizzard wants it.
 local function Remember(t, ...)
@@ -62,14 +97,15 @@ function LA.Place(t)
   Capture(t)
   if not t.anchor then
     t.anchor = CreateFrame("Frame", nil, UIParent)
-    t.anchor:SetSize(W, 1)
+    t.anchor:SetSize(W, LA.H)
   end
   t.anchor:ClearAllPoints()
   t.anchor:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", pos.x, pos.y)
   busy = true
   f.ignoreFramePositionManager = true
   f:ClearAllPoints()
-  f:SetPoint("BOTTOM", t.anchor, "BOTTOM", 0, 0)
+  local edge = (t.key == "roll" and LA.db.growDown) and "TOP" or "BOTTOM"
+  f:SetPoint(edge, t.anchor, edge, 0, 0)
   busy = false
   t.moved = true
 end
@@ -105,8 +141,8 @@ end
 -- Defaults: back to Blizzard's own positions.
 function LA.DefaultsAll()
   local db = LA.db
-  local bar = db.toolbar -- the toolbar position is not a loot position
-  wipe(db)
+  local bar = db.toolbar -- the toolbar position is not a loot position, so Defaults keeps it
+  wipe(db)              -- (this also sets the rolls back to growing up, Blizzard's default)
   db.toolbar = bar
   for _, t in ipairs(targets) do RestoreDefault(t) end
   RelayoutBlizzard()
@@ -116,6 +152,7 @@ end
 -- Reset: back to how it was when the unlock screen opened.
 function LA.RevertAll()
   local db, snapshot = LA.db, LA.snapshot
+  db.growDown = LA.snapGrow
   for _, t in ipairs(targets) do
     local s = snapshot and snapshot[t.key]
     if s then
@@ -132,9 +169,48 @@ function LA.RevertAll()
   LA.RefreshHandles()
 end
 
+-- Grow down (loot rolls only): Blizzard stacks each roll frame on top of the previous one.
+-- After every layout pass, mirror those anchors (TOP <-> BOTTOM, offset flipped) so the stack
+-- builds downwards from the box instead. A frame is only mirrored once per Blizzard layout.
+-- The "You received" popups are never touched.
+local function Swap(s)
+  if s:find("BOTTOM") then return (s:gsub("BOTTOM", "TOP")) end
+  return (s:gsub("TOP", "BOTTOM"))
+end
+
+local function Mirror(frame)
+  if not frame or frame:GetNumPoints() ~= 1 then return end
+  local p, rel, rp, x, y = frame:GetPoint(1)
+  local mark = frame.laMirrored
+  if mark and mark[1] == p and mark[2] == rel and mark[3] == rp and mark[4] == x and mark[5] == y then return end
+  local np, nrp, ny = Swap(p), Swap(rp or p), -(y or 0)
+  frame:ClearAllPoints()
+  frame:SetPoint(np, rel, nrp, x or 0, ny)
+  frame.laMirrored = { np, rel, nrp, x or 0, ny }
+end
+
+local function MirrorStacks()
+  if not (LA.db and LA.db.growDown) then return end
+  if GroupLootContainer and GroupLootContainer.rollFrames then
+    for _, frame in pairs(GroupLootContainer.rollFrames) do Mirror(frame) end
+  end
+end
+
 local function PlaceAll()
   if LA.unlocked then return end
   for _, t in ipairs(targets) do LA.Place(t) end
+end
+
+local function AfterLayout()
+  MirrorStacks()
+  PlaceAll()
+end
+
+-- Loot roll grow direction: down (true) or up (false, Blizzard default).
+function LA.SetGrowDown(value)
+  LA.db.growDown = value and true or nil
+  RelayoutBlizzard()
+  AfterLayout()
 end
 
 local hooked = false
@@ -157,10 +233,10 @@ local function InstallHooks()
     end
   end
   for _, name in ipairs({ "UIParent_ManageFramePositions", "AlertFrame_FixAnchors", "GroupLootContainer_Update" }) do
-    if type(_G[name]) == "function" then hooksecurefunc(name, PlaceAll) end
+    if type(_G[name]) == "function" then hooksecurefunc(name, AfterLayout) end
   end
   if AlertFrame and type(AlertFrame.UpdateAnchors) == "function" then
-    hooksecurefunc(AlertFrame, "UpdateAnchors", PlaceAll)
+    hooksecurefunc(AlertFrame, "UpdateAnchors", AfterLayout)
   end
 end
 
