@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased](https://github.com/jordinbrouwer/LootAnchor/compare/1.2.0...main)
 
+### Added
+- Screenshots in the README for the toolbar, positioning and testing.
+
 ## [1.2.0 (2026-11-10)](https://github.com/jordinbrouwer/LootAnchor/compare/1.1.0...1.2.0)
 
 ### Added

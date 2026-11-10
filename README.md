@@ -4,20 +4,26 @@ Move the default loot roll windows and the "You received" and achievement popups
 
 ## Usage
 
-### Slash commands
+### Toolbar
 
-- `/la` or `/lootanchor`: open the editor. Dark boxes appear; drag them where you want. Click **Save & Exit** (or type `/la` again) to close.
+<img src="docs/images/1-toolbar.png" alt="Toolbar: use Edit to move frames; Reset and Defaults restore the layout." width="320">
 
-### Edit tab
+- `/la` or `/lootanchor`: open the editor. Click **Save & Exit** (or type `/la` again) to close and keep your positions. They are kept after `/reload`.
+- The toolbar can be dragged too.
+- **Reset**: undo your changes since you opened LootAnchor.
+- **Defaults**: back to Blizzard's own positions and grow directions. The toolbar position and test duration stay.
 
-- Drag the boxes where you want them. Boxes snap to the screen edges, the screen centre and each other, otherwise to a 10 pixel grid. The toolbar can be dragged too.
+### Positioning
+
+<img src="docs/images/2-positioning.png" alt="Positioning: drag the frames or use the arrows and X/Y to place your alerts." width="320">
+
+- Drag the boxes where you want them. Boxes snap to the screen edges, the screen centre and each other, otherwise to a 10 pixel grid.
 - Click a box to select it. Arrow buttons around it, and the arrow keys, move it. Hold a button to keep moving.
 - The settings window of the selected box has its grow direction and a typed X / Y position. Loot rolls and "You received" popups each have their own grow direction.
-- **Save & Exit**: close and keep your positions. They are kept after `/reload`.
-- **Reset** (toolbar): undo your changes since you opened LootAnchor.
-- **Defaults** (toolbar): back to Blizzard's own positions and grow directions. The toolbar position and test duration stay.
 
-### Test tab
+### Testing
+
+<img src="docs/images/3-testing.png" alt="Testing: preview alerts with the Roll, Received and Achievement buttons." width="320">
 
 - **Roll**, **Received** and **Achievement** show a stand-in window so you can see where it lands and which way it grows. Click again for more.
 - Duration: 5 seconds, 10 seconds, 20 seconds or until clicked away.
