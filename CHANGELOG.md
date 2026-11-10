@@ -1,6 +1,29 @@
 # Changelog
+All notable changes to this project will be documented in this file.
 
-## 1.1.0 - 2026-11-08
+## [Unreleased](https://github.com/jordinbrouwer/LootAnchor/compare/1.2.0...main)
+
+## [1.2.0 (2026-11-10)](https://github.com/jordinbrouwer/LootAnchor/compare/1.1.0...1.2.0)
+
+### Added
+- Test tab on the LootAnchor bar: show a test loot roll, "You received" popup or achievement to see where they land and which way they grow. Click again for more.
+- Test duration: 5 seconds, 10 seconds, 20 seconds or until clicked away. **Clear** removes all test windows.
+- Achievement popups move with the "You received" box.
+- Grow direction for the "You received" popups, separate from the loot rolls.
+- Settings window of the selected box with its grow direction and a typed X / Y position.
+- Arrow buttons around the selected box, and the arrow keys, move it. Hold a button to keep moving.
+
+### Changed
+- `/la` opens the anchor editor, which now also has the Test tab.
+- The settings panel has one **Edit anchors** button and mentions achievements.
+- Reset in the toolbar goes back to how things were when you opened LootAnchor.
+- Defaults keeps the bar position and the test duration.
+- Each box keeps its own colour and label, and its border lights up when it is selected or hovered.
+
+### Removed
+- `/la reset` and `/lootanchor reset`. Use **Defaults** in the toolbar instead.
+
+## [1.1.0 (2026-11-08)](https://github.com/jordinbrouwer/LootAnchor/compare/1.0.0...1.1.0)
 
 ### Added
 - Grow direction arrow in the top right corner of the Loot Rolls box: stack the loot rolls downwards instead of upwards. Reset and Defaults restore the previous / default (up) direction.
@@ -14,7 +37,7 @@
 - Defaults is no longer in the settings panel, only on the unlock screen toolbar.
 - Defaults keeps the toolbar position.
 
-## 1.0.0 - 2026-11-07
+## [1.0.0 (2026-11-07)](https://github.com/jordinbrouwer/LootAnchor/releases/tag/1.0.0)
 
 First release.
 
