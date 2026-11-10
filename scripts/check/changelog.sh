@@ -6,9 +6,14 @@ if [ ! -f "CHANGELOG.md" ]; then
   exit 1
 fi
 
+if ! grep -Eq '^## \[Unreleased\]' CHANGELOG.md; then
+  echo "[CHANGELOG CHECK] FAILED: Missing Unreleased header."
+  exit 1
+fi
+
 invalid_headers="$(
-  awk '/^## [0-9]+\.[0-9]+\.[0-9]+/ { print }' CHANGELOG.md | \
-    grep -Ev '^## [0-9]+\.[0-9]+\.[0-9]+ - [0-9]{4}-[0-9]{2}-[0-9]{2}$' || true
+  awk '/^## \[[0-9]+\.[0-9]+\.[0-9]+/ { print }' CHANGELOG.md | \
+    grep -Ev '^## \[[0-9]+\.[0-9]+\.[0-9]+ \([0-9]{4}-[0-9]{2}-[0-9]{2}\)\]' || true
 )"
 if [ -n "$invalid_headers" ]; then
   echo "[CHANGELOG CHECK] FAILED: Invalid release heading format detected."
@@ -17,7 +22,7 @@ if [ -n "$invalid_headers" ]; then
 fi
 
 version="$(
-  sed -nE 's/^## ([0-9]+\.[0-9]+\.[0-9]+) - .*/\1/p' CHANGELOG.md | head -n 1
+  sed -nE 's/^## \[([0-9]+\.[0-9]+\.[0-9]+).*/\1/p' CHANGELOG.md | head -n 1
 )"
 if [ -z "$version" ]; then
   echo "[CHANGELOG CHECK] FAILED: Missing first semantic version header."
@@ -25,7 +30,7 @@ if [ -z "$version" ]; then
 fi
 
 release_date="$(
-  sed -nE 's/^## [0-9]+\.[0-9]+\.[0-9]+ - ([0-9]{4}-[0-9]{2}-[0-9]{2})$/\1/p' CHANGELOG.md | head -n 1
+  sed -nE 's/^## \[[0-9]+\.[0-9]+\.[0-9]+ \(([0-9]{4}-[0-9]{2}-[0-9]{2})\)\].*/\1/p' CHANGELOG.md | head -n 1
 )"
 if [ -z "$release_date" ]; then
   echo "[CHANGELOG CHECK] FAILED: Missing release date in first version heading."
@@ -40,7 +45,7 @@ fi
 notes="$(
   awk '
     BEGIN { in_section = 0; first_done = 0 }
-    /^## [0-9]+\.[0-9]+\.[0-9]+ - / {
+    /^## \[[0-9]+\.[0-9]+\.[0-9]+/ {
       if (first_done) exit
       in_section = 1
       first_done = 1

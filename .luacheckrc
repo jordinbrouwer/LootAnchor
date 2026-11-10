@@ -7,4 +7,5 @@ globals = { "LootAnchor", "LootAnchorDB", "SLASH_LOOTANCHOR1", "SLASH_LOOTANCHOR
 read_globals = {
   "CreateFrame", "UIParent", "GroupLootContainer", "AlertFrame",
   "hooksecurefunc", "wipe", "unpack", "GetCursorPosition", "GameTooltip", "GameTooltip_Hide", "C_Timer", "UIParent_ManageFramePositions", "AlertFrame_FixAnchors", "GroupLootContainer_Update", "_G", "Settings", "SettingsPanel", "InterfaceOptionsFrame", "HideUIPanel",
+  "InCombatLockdown", "IsMouseButtonDown",
 }
