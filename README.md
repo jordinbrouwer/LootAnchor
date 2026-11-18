@@ -2,6 +2,9 @@
 
 Move the default loot roll windows and the "You received" and achievement popups. No skins, no replacements.
 
+<!-- release:start -->
+<!-- release:end -->
+
 ## Usage
 
 ### Toolbar

@@ -1,12 +1,9 @@
 # Changelog
-All notable changes to this project will be documented in this file.
+Written by the release pipeline from the commits; see `CONTRIBUTING.md`.
 
 ## [Unreleased](https://github.com/jordinbrouwer/LootAnchor/compare/1.2.0...main)
 
-### Added
-- Screenshots in the README for the toolbar, positioning and testing.
-
-## [1.2.0 (2026-11-10)](https://github.com/jordinbrouwer/LootAnchor/compare/1.1.0...1.2.0)
+## [1.2.0 (2026-11-10)](https://github.com/jordinbrouwer/LootAnchor/releases/tag/1.2.0)
 
 ### Added
 - Test tab on the LootAnchor bar: show a test loot roll, "You received" popup or achievement to see where they land and which way they grow. Click again for more.
@@ -26,7 +23,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - `/la reset` and `/lootanchor reset`. Use **Defaults** in the toolbar instead.
 
-## [1.1.0 (2026-11-08)](https://github.com/jordinbrouwer/LootAnchor/compare/1.0.0...1.1.0)
+## [1.1.0 (2026-11-08)](https://github.com/jordinbrouwer/LootAnchor/releases/tag/1.1.0)
 
 ### Added
 - Grow direction arrow in the top right corner of the Loot Rolls box: stack the loot rolls downwards instead of upwards. Reset and Defaults restore the previous / default (up) direction.

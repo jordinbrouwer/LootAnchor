@@ -1,10 +1,11 @@
 ## Interface: 120100, 120005, 120007, 16001
 
 ## Title: LootAnchor
-## Notes: Move the default loot roll windows and the "You received" and achievement popups.
+## Notes: Move the default loot roll windows and the "You received" and achievement popups. No skins, no replacements.
 ## IconTexture: Interface\AddOns\LootAnchor\LootAnchor
 ## Version: @project-version@
 ## Author: Jordin
+## X-Website: https://www.curseforge.com/wow/addons/loot-anchor
 
 ## DefaultState: enabled
 ## LoadOnDemand: 0
