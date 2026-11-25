@@ -1,10 +1,19 @@
-LootAnchor = LootAnchor or {}
+-- The test windows: made-up loot roll, "You received" and achievement cards, stacked like the real ones.
+-- (The buttons are in UI/TestBox.lua.)
 local LA = LootAnchor
 
-local DURATIONS = { { 5, "5s", "5 seconds" }, { 10, "10s", "10 seconds" }, { 20, "20s", "20 seconds" }, { 0, "Hold", "Until clicked" } }
 local MAX_CARDS = 4
 
-local function Seconds()
+-- How long test windows stay: seconds (0: until clicked), and the locale keys of the short and long name.
+LA.DURATIONS = {
+  { 5, "duration_5_short", "duration_5" },
+  { 10, "duration_10_short", "duration_10" },
+  { 20, "duration_20_short", "duration_20" },
+  { 0, "duration_hold_short", "duration_hold" },
+}
+
+-- How many seconds a test window stays.
+function LA.TestSeconds()
   local value = LA.db.testDuration
   if value == nil then return 10 end
   return value
@@ -86,7 +95,7 @@ local function ShowCard(stack, title, line, r, g, b)
   f.line:SetText(line)
   f.line:SetTextColor(r, g, b)
   f.token = (f.token or 0) + 1
-  local mine, seconds = f.token, Seconds()
+  local mine, seconds = f.token, LA.TestSeconds()
   f:Show()
   Relayout(stack)
   if seconds > 0 then
@@ -96,9 +105,9 @@ local function ShowCard(stack, title, line, r, g, b)
   end
 end
 
-function LA.TestRolls() ShowCard(stacks.roll, "Test loot roll", "Need   Greed   Pass", 0.56, 0.64, 0.68) end
-function LA.TestReceived() ShowCard(stacks.alert, "You received", "[Test item]", 0.0, 0.44, 0.87) end
-function LA.TestAchievement() ShowCard(stacks.alert, "Achievement earned", "Test achievement", 1, 1, 1) end
+function LA.TestRolls() ShowCard(stacks.roll, LA.Loc("card_roll_title"), LA.Loc("card_roll_line"), 0.56, 0.64, 0.68) end
+function LA.TestReceived() ShowCard(stacks.alert, LA.Loc("card_received_title"), LA.Loc("card_received_line"), 0.0, 0.44, 0.87) end
+function LA.TestAchievement() ShowCard(stacks.alert, LA.Loc("card_achievement_title"), LA.Loc("card_achievement_line"), 1, 1, 1) end
 
 function LA.HideTests()
   clearing = true
@@ -109,40 +118,4 @@ function LA.HideTests()
     end
   end
   clearing = false
-end
-
-function LA.BuildTestControls(bar)
-  local group = LA.ButtonGroup(bar, {
-    { "Roll", 46, LA.TestRolls, "Show a loot roll window. Click again for more." },
-    { "Received", 66, LA.TestReceived, "Show a \"You received\" popup. Click again for more." },
-    { "Achievement", 84, LA.TestAchievement, "Show an achievement popup. Click again for more." },
-  }, 22)
-  group:SetPoint("LEFT", 8, 0)
-
-  local duration = LA.Button(bar, "", 58, 22, "ghost", "How long the test windows stay.")
-  duration:SetPoint("LEFT", group, "RIGHT", 8, 0)
-  duration.text:ClearAllPoints()
-  duration.text:SetPoint("LEFT", 8, 0)
-  LA.Caret(duration, LA.MUTED):SetPoint("LEFT", duration.text, "RIGHT", 5, -1)
-  local function Refresh()
-    for _, entry in ipairs(DURATIONS) do
-      if entry[1] == Seconds() then duration.text:SetText(entry[2]) end
-    end
-  end
-  local names = {}
-  for i, entry in ipairs(DURATIONS) do names[i] = entry[3] end
-  local list = LA.Menu(bar, duration, names, 120, function(n)
-    LA.db.testDuration = DURATIONS[n][1]
-    Refresh()
-  end)
-  duration:SetScript("OnClick", function() list:SetShown(not list:IsShown()) end)
-
-  local clear = LA.Button(bar, "Clear", 40, 22, "ghost", "Remove every test window from the screen.")
-  clear:SetPoint("LEFT", duration, "RIGHT", 2, 0)
-  clear:SetScript("OnClick", LA.HideTests)
-
-  bar:SetScript("OnShow", Refresh)
-  bar:SetScript("OnHide", function() list:Hide() end)
-  Refresh()
-  return 8 + group:GetWidth() + 8 + 58 + 2 + 40 + 8
 end

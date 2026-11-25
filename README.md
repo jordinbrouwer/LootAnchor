@@ -7,34 +7,33 @@ Move the default loot roll windows and the "You received" and achievement popups
 
 ## Usage
 
-### Toolbar
+### The LootAnchor window
 
-<img src="docs/images/1-toolbar.png" alt="Toolbar: use Edit to move frames; Reset and Defaults restore the layout." width="320">
-
-- `/la` or `/lootanchor`: open the editor. Click **Save & Exit** (or type `/la` again) to close and keep your positions. They are kept after `/reload`.
-- The toolbar can be dragged too.
+- `/la` or `/lootanchor`: open the LootAnchor window. Click **Save & exit**, the cross in the top right corner, or type `/la` again to close it and keep your positions. They are kept after `/reload`.
+- Drag the window by its header; its position is remembered.
+- **Edit** and **Test** switch between moving the boxes and trying them out.
 - **Reset**: undo your changes since you opened LootAnchor.
-- **Defaults**: back to Blizzard's own positions and grow directions. The toolbar position and test duration stay.
+- **Defaults**: reset to Blizzard's initial location and grow directions. The window position and test duration stay.
 
 ### Positioning
 
-<img src="docs/images/2-positioning.png" alt="Positioning: drag the frames or use the arrows and X/Y to place your alerts." width="320">
+<img src="docs/images/1-positioning.png" alt="Positioning: drag the Loot Rolls and You Received & Achievements boxes, or use the arrows, Grow up / Grow down and X / Y." width="320">
 
-- Drag the boxes where you want them. Boxes snap to the screen edges, the screen centre and each other, otherwise to a 10 pixel grid.
+- On the **Edit** tab, drag the **Loot Rolls** and **You Received & Achievements** boxes where you want them. Boxes snap to the screen edges, the screen centre and each other, otherwise to a 10 pixel grid.
 - Click a box to select it. Arrow buttons around it, and the arrow keys, move it. Hold a button to keep moving.
-- The settings window of the selected box has its grow direction and a typed X / Y position. Loot rolls and "You received" popups each have their own grow direction.
+- The small box next to the selected box has **Grow up** / **Grow down** (which way the windows stack) and its **X** / **Y** position. Loot rolls and "You received" popups each have their own grow direction.
 
 ### Testing
 
-<img src="docs/images/3-testing.png" alt="Testing: preview alerts with the Roll, Received and Achievement buttons." width="320">
+<img src="docs/images/2-testing.png" alt="Testing: the test windows next to the Try them out box with the Roll, Received and Achievement buttons." width="320">
 
-- **Roll**, **Received** and **Achievement** show a stand-in window so you can see where it lands and which way it grows. Click again for more.
-- Duration: 5 seconds, 10 seconds, 20 seconds or until clicked away.
+- On the **Test** tab, **Roll**, **Received** and **Achievement** show a stand-in window so you can see where it lands and which way it grows. Click again for more.
+- How long they stay: 5 seconds, 10 seconds, 20 seconds or until clicked.
 - **Clear** removes every test window.
 
 ### Settings panel
 
-- Settings > AddOns > LootAnchor has an **Edit anchors** button.
+- Settings > AddOns > LootAnchor has an **Open LootAnchor** button.
 
 ### Other notes
 

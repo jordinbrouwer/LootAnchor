@@ -3,6 +3,17 @@ Written by the release pipeline from the commits; see `CONTRIBUTING.md`.
 
 ## [Unreleased](https://github.com/jordinbrouwer/LootAnchor/compare/1.2.0...main)
 
+### Added
+- Close button (the cross in the top right corner) and a reminder at the bottom of the window: "Type /la in chat to open this again."
+- A tooltip on the **Grow up** / **Grow down** list: "Which way the windows stack."
+
+### Changed
+- The toolbar is now a LootAnchor window: a header with the logo, the name and "Move the loot and achievement popups.", the **Edit** and **Test** tabs, a box for each tab ("Move the boxes" with a short hint, **Reset** and **Defaults**; "Try them out" with the test buttons, duration and **Clear**) and **Save & exit** at the bottom. Drag it by its header.
+- Tooltips are LootAnchor's own: a dark box with a teal edge, the button name as a teal title and the help text under it.
+- Borders are exactly one screen pixel at any UI scale, and texts have a thin outline, in the window, the boxes you drag and the settings page.
+- The settings page button is now a flat **Open LootAnchor** button (was **Edit anchors**), with "or type /la" under it.
+- The code is split into the `Core`, `UI`, `Locale` and `Media` folders.
+
 ## [1.2.0 (2026-11-10)](https://github.com/jordinbrouwer/LootAnchor/releases/tag/1.2.0)
 
 ### Added

@@ -1,20 +1,20 @@
-LootAnchor = LootAnchor or {}
+-- Moving the game's windows: the loot rolls (GroupLootContainer) and the "You received" and achievement popups
+-- (AlertFrame) hang on an anchor of ours with a saved position; the stack can grow up or down.
 local LA = LootAnchor
 
-LA.W, LA.H = 220, 60
+LA.W, LA.H = 220, 60   -- the size of a box you drag (and of the anchor)
 LA.SNAP = 10
 LA.SNAP_DIST = 14
-LA.TEAL = { 0.10, 0.85, 0.68 }
-LA.unlocked = false
-
+LA.unlocked = false     -- true while the boxes are being dragged
 local busy = false
 
 local FALLBACK = { n = 5, "BOTTOM", UIParent, "BOTTOM", 0, 128 }
 
+-- The windows we move. `get` finds the game's frame; the colour of a box is THEME.TARGET (UI/Base.lua).
 local targets = {
-  { key = "roll", label = "Loot Rolls", color = LA.TEAL, labelAt = "TOP",
+  { key = "roll", label = LA.Loc("target_roll"), labelAt = "TOP",
     growKey = "growDown", get = function() return GroupLootContainer end },
-  { key = "alert", label = "You Received & Achievements", color = { 1.0, 0.72, 0.2 }, labelAt = "BOTTOM",
+  { key = "alert", label = LA.Loc("target_alert"), labelAt = "BOTTOM",
     growKey = "growDownAlert", get = function() return AlertFrame end },
 }
 LA.targets = targets
@@ -93,9 +93,9 @@ end
 
 function LA.DefaultsAll()
   local db = LA.db
-  local bar, seconds = db.toolbar, db.testDuration
+  local bar, seconds, version = db.toolbar, db.testDuration, db.DbVersion   -- what is not a position stays
   wipe(db)
-  db.toolbar, db.testDuration = bar, seconds
+  db.toolbar, db.testDuration, db.DbVersion = bar, seconds, version
   for _, t in ipairs(targets) do RestoreDefault(t) end
   RelayoutBlizzard()
   LA.RefreshHandles()
@@ -123,9 +123,8 @@ local function Swap(s)
   return (s:gsub("TOP", "BOTTOM"))
 end
 
--- Blizzard stacks upward. Grow-down flips TOP/BOTTOM and the offset.
--- Alerts may keep our last SetPoint and add Blizzard's on top (no ClearAllPoints);
--- keep Blizzard's point and flip that one.
+-- Blizzard stacks upward; grow-down flips TOP/BOTTOM and the offset. Alerts may keep our last SetPoint
+-- and add Blizzard's on top: keep Blizzard's point and flip that one.
 local function Mirror(frame, want)
   local n, mark = frame:GetNumPoints(), frame.laMirrored
   if n == 0 or n > 2 or (n == 2 and not mark) then return end
@@ -214,20 +213,16 @@ local function InstallHooks()
   end
 end
 
-local events = CreateFrame("Frame")
-events:RegisterEvent("PLAYER_LOGIN")
-events:RegisterEvent("PLAYER_ENTERING_WORLD")
-events:RegisterEvent("UI_SCALE_CHANGED")
-events:RegisterEvent("DISPLAY_SIZE_CHANGED")
-events:SetScript("OnEvent", function(_, event)
-  if event == "PLAYER_LOGIN" then
-    LootAnchorDB = LootAnchorDB or {}
-    LA.db = LootAnchorDB
-    LA.BuildPanel()
-  end
+-- Starts at login and again when the screen changes. The game moves its windows on its own,
+-- so the placing is repeated a little later too.
+local function Refresh()
   if not LA.db then return end
   InstallHooks()
   PlaceAll()
   C_Timer.After(1, PlaceAll)
   C_Timer.After(4, PlaceAll)
-end)
+end
+LA.On("PLAYER_LOGIN", Refresh)
+LA.On("PLAYER_ENTERING_WORLD", Refresh)
+LA.On("UI_SCALE_CHANGED", Refresh)
+LA.On("DISPLAY_SIZE_CHANGED", Refresh)
