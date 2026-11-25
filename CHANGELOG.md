@@ -1,7 +1,9 @@
 # Changelog
 Written by the release pipeline from the commits; see `CONTRIBUTING.md`.
 
-## [Unreleased](https://github.com/jordinbrouwer/LootAnchor/compare/1.2.0...main)
+## [Unreleased](https://github.com/jordinbrouwer/LootAnchor/compare/1.3.0...main)
+
+## [1.3.0 (2026-11-25)](https://github.com/jordinbrouwer/LootAnchor/releases/tag/1.3.0)
 
 ### Added
 - Close button (the cross in the top right corner) and a reminder at the bottom of the window: "Type /la in chat to open this again."
