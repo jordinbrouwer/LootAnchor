@@ -3,6 +3,7 @@
 Move the default loot roll windows and the "You received" and achievement popups. No skins, no replacements.
 
 <!-- release:start -->
+[![CurseForge](https://img.shields.io/curseforge/v/1790230?label=CurseForge)](https://www.curseforge.com/wow/addons/loot-anchor) [![Downloads](https://img.shields.io/curseforge/dt/1790230?label=downloads)](https://www.curseforge.com/wow/addons/loot-anchor) [![GitHub release](https://img.shields.io/github/v/release/jordinbrouwer/LootAnchor?label=GitHub)](https://github.com/jordinbrouwer/LootAnchor/releases/latest)
 <!-- release:end -->
 
 ## Usage
