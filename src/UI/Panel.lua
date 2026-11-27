@@ -8,6 +8,7 @@ local L = LA.Loc
 local TEAL_CODE = "|cff1ad9ad"   -- the teal of the addon, as a colour code (for the hint)
 local panel, tabs = nil, {}
 local boxes = {}      -- edit, test
+local headerBar, fitHeader   -- the tabs and boxes hang under the header band, so they follow its height
 
 ---------------------------------------------------------------- the parts
 -- The frame: where it was left, or else at the top of the screen. You drag it by its header.
@@ -58,12 +59,19 @@ local function BuildHeader(frame)
   subtitle:SetJustifyH("LEFT")
   subtitle:SetWordWrap(true)   -- a long text goes on over more lines; the band grows with it
   subtitle:SetText(L("header_sub"))
-  title:SetPoint("LEFT", bar, "LEFT", 56, (subtitle:GetStringHeight() + 2) / 2)
   -- as tall as the name and description need, with the same air above and below (at least the default);
-  -- LAYOUT.HEADER follows, so the tabs, the boxes and the panel height place themselves under it
-  local h = math.max(LAYOUT.HEADER - 3, math.ceil(title:GetStringHeight() + 2 + subtitle:GetStringHeight() + 14))
-  bar:SetHeight(h)
-  LAYOUT.HEADER = h + 3
+  -- LAYOUT.HEADER follows, as the panel height uses it. Gives back true when the height changed.
+  local minH = LAYOUT.HEADER - 3
+  function fitHeader()
+    title:SetPoint("LEFT", bar, "LEFT", 56, (subtitle:GetStringHeight() + 2) / 2)
+    local h = math.max(minH, math.ceil(title:GetStringHeight() + 2 + subtitle:GetStringHeight() + 14))
+    if math.abs(bar:GetHeight() - h) < 0.5 then return false end
+    bar:SetHeight(h)
+    LAYOUT.HEADER = h + 3
+    return true
+  end
+  fitHeader()
+  headerBar = bar
 
   local close = UI.CreateCloseButton(bar, function() LA.ToggleOptions() end)
   close:SetPoint("TOPRIGHT", bar, "TOPRIGHT", -9, 0)
@@ -73,7 +81,7 @@ end
 local function BuildTabs(frame)
   local width = (LAYOUT.PANEL_W - LAYOUT.OUTER * 2 - 4) / 2
   tabs.edit = UI.FlatChip(frame, L("tab_edit"), width, LAYOUT.TAB_H, "flat", L("tip_edit"))
-  tabs.edit:SetPoint("TOPLEFT", frame, "TOPLEFT", LAYOUT.OUTER, -(LAYOUT.HEADER + LAYOUT.TOP))
+  tabs.edit:SetPoint("TOPLEFT", headerBar, "BOTTOMLEFT", LAYOUT.OUTER - 1, -LAYOUT.TOP)   -- the band is inset 1
   tabs.edit:SetScript("OnClick", function() LA.SetMode("edit") end)
   tabs.test = UI.FlatChip(frame, L("tab_test"), width, LAYOUT.TAB_H, "flat", L("tip_test"))
   tabs.test:SetPoint("LEFT", tabs.edit, "RIGHT", 4, 0)
@@ -105,10 +113,17 @@ local function BuildBoxes(frame)
   boxes.edit = UI.BuildEditBox(frame)
   boxes.test = UI.BuildTestBox(frame)
   for _, box in pairs(boxes) do
-    box:SetPoint("TOPLEFT", frame, "TOPLEFT", LAYOUT.OUTER, -(LAYOUT.HEADER + LAYOUT.TOP + LAYOUT.TAB_H + LAYOUT.TAB_GAP))
-    box:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -LAYOUT.OUTER, -(LAYOUT.HEADER + LAYOUT.TOP + LAYOUT.TAB_H + LAYOUT.TAB_GAP))
+    local y = -(LAYOUT.TOP + LAYOUT.TAB_H + LAYOUT.TAB_GAP)
+    box:SetPoint("TOPLEFT", headerBar, "BOTTOMLEFT", LAYOUT.OUTER - 1, y)
+    box:SetPoint("TOPRIGHT", headerBar, "BOTTOMRIGHT", -(LAYOUT.OUTER - 1), y)
     box:Hide()
   end
+end
+
+-- The panel is as tall as the header, the tabs, the box of the chosen tab and the footer.
+local function SetPanelHeight()
+  local box = LA.mode == "edit" and boxes.edit or boxes.test
+  panel:SetHeight(LAYOUT.HEADER + LAYOUT.TOP + LAYOUT.TAB_H + LAYOUT.TAB_GAP + box:GetHeight() + LAYOUT.TAB_GAP + LAYOUT.FOOTER)
 end
 
 local function Build()
@@ -118,6 +133,11 @@ local function Build()
   BuildFooter(panel)
   BuildBoxes(panel)
   UI.ApplyOutline(panel)
+  -- measure the header again on every open: the first measure can come before WoW has the font, and then the
+  -- description gets one line too few
+  panel:HookScript("OnShow", function()
+    C_Timer.After(0, function() if fitHeader() and LA.mode then SetPanelHeight() end end)
+  end)
 end
 
 ---------------------------------------------------------------- modes
@@ -136,8 +156,7 @@ function LA.SetMode(mode)
   tabs.test:SetSelected(not editing)
   boxes.edit:SetShown(editing)
   boxes.test:SetShown(not editing)
-  local box = editing and boxes.edit or boxes.test
-  panel:SetHeight(LAYOUT.HEADER + LAYOUT.TOP + LAYOUT.TAB_H + LAYOUT.TAB_GAP + box:GetHeight() + LAYOUT.TAB_GAP + LAYOUT.FOOTER)
+  SetPanelHeight()
   if editing then
     LA.HideTests()
   else
