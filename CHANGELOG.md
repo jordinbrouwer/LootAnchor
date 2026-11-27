@@ -1,7 +1,12 @@
 # Changelog
 Written by the release pipeline from the commits; see `CONTRIBUTING.md`.
 
-## [Unreleased](https://github.com/jordinbrouwer/LootAnchor/compare/1.3.1...main)
+## [Unreleased](https://github.com/jordinbrouwer/LootAnchor/compare/1.3.2...main)
+
+## [1.3.2 (2026-11-27)](https://github.com/jordinbrouwer/LootAnchor/releases/tag/1.3.2)
+
+### Fixed
+- The header no longer cuts off the second line of its description when the window opens. ([6964f5e](https://github.com/jordinbrouwer/LootAnchor/commit/6964f5ef11fc861920443c2b76da62500af61852))
 
 ## [1.3.1 (2026-11-27)](https://github.com/jordinbrouwer/LootAnchor/releases/tag/1.3.1)
 
