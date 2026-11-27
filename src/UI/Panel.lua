@@ -56,9 +56,14 @@ local function BuildHeader(frame)
   subtitle:SetTextColor(unpack(THEME.SUBTITLE_TEXT))
   subtitle:SetWidth(LAYOUT.PANEL_W - 56 - 40)   -- stays clear of the close button
   subtitle:SetJustifyH("LEFT")
-  subtitle:SetWordWrap(false)
+  subtitle:SetWordWrap(true)   -- a long text goes on over more lines; the band grows with it
   subtitle:SetText(L("header_sub"))
   title:SetPoint("LEFT", bar, "LEFT", 56, (subtitle:GetStringHeight() + 2) / 2)
+  -- as tall as the name and description need, with the same air above and below (at least the default);
+  -- LAYOUT.HEADER follows, so the tabs, the boxes and the panel height place themselves under it
+  local h = math.max(LAYOUT.HEADER - 3, math.ceil(title:GetStringHeight() + 2 + subtitle:GetStringHeight() + 14))
+  bar:SetHeight(h)
+  LAYOUT.HEADER = h + 3
 
   local close = UI.CreateCloseButton(bar, function() LA.ToggleOptions() end)
   close:SetPoint("TOPRIGHT", bar, "TOPRIGHT", -9, 0)
