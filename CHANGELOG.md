@@ -1,7 +1,12 @@
 # Changelog
 Written by the release pipeline from the commits; see `CONTRIBUTING.md`.
 
-## [Unreleased](https://github.com/jordinbrouwer/LootAnchor/compare/1.3.0...main)
+## [Unreleased](https://github.com/jordinbrouwer/LootAnchor/compare/1.3.1...main)
+
+## [1.3.1 (2026-11-27)](https://github.com/jordinbrouwer/LootAnchor/releases/tag/1.3.1)
+
+### Fixed
+- The header description goes on over more lines instead of being cut off, and the header grows with it. ([399851f](https://github.com/jordinbrouwer/LootAnchor/commit/399851f5ef198a27cb14ba051c9176822603e84e))
 
 ## [1.3.0 (2026-11-25)](https://github.com/jordinbrouwer/LootAnchor/releases/tag/1.3.0)
 
